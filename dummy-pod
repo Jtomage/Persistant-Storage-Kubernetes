@@ -1,0 +1,9 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: dummy-pod
+spec:
+  containers:
+    - name: dummy-pod
+      image: centos
+      command: ["/bin/bash", "-ec", "while :; do echo '.'; sleep 5 ; done"]

@@ -1,0 +1,68 @@
+kind: Service
+apiVersion: v1
+metadata: 
+  name: postgresql
+  labels:
+    app: postgresql
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: postgresql
+  selector:
+    app: postgresql
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-config
+  labels:
+    app: postgresql
+data:
+  POSGRESS_DB: postgresdb
+  POSTGRES_USER: postgresadmin
+  POSTGRES_PASSWORD: admin123
+  PGDATA: /var/lib/postgresql/data/pgdata
+
+---
+
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: postgresql
+spec: 
+  selector:
+    matchLabels:
+      app: postgresql
+  serviceName: postgresql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+        - name: postgresql
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgresql
+              containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgresql-config
+          volumeMounts:
+            - name: postgresdb
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgresdb
+      spec:
+        accessModes: 
+          - ReadWriteOnce
+        storageClassName: nfs-client
+        resources:
+          requests:
+            storage: 5Gi

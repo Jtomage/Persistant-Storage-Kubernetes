@@ -1,0 +1,31 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgresql-pv-nfs
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-client
+  nfs:
+    path: /data/postgresql
+    server: 172.31.15.147
+  
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgresql-pvc-nfs
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "nfs-client"
+spec:
+  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
