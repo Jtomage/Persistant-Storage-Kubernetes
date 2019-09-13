@@ -25,5 +25,9 @@ Here the deployment of the postgreSQL. A service is used to make sure an pod / a
 A ConfigMap to contain the necessary information postgreSQL needs to run. This way a different config map can be used based on jursidiction aka Dev, Test, Prod, and etc. A future change would be use Secrets built into kubernetes instead of passwords for better security. Lastly, the statefulSet that deploys the postgreSQL pod. The main reason its a statefulset opposed to a deployment is when troubleshooting the pod name was consistant. This can be converted to a deployment.
 
 ### dummy-pod
-Create a dummy pod using centos to test the persistants of postgreSQL. It uses centos which I would enter using kubectl exec -it dummy-pod -- /bin/sh
+Create a dummy pod using centos to test the persistants of postgreSQL. It uses centos which I would enter using 
+
+**kubectl exec -it dummy-pod -- /bin/sh**
+
+
 then install psql client and test the connection using the service. **[servicename].[namespace].svc.cluster.local**
